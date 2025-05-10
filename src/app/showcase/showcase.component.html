@@ -1,0 +1,275 @@
+<div
+  class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 bg-noise-pattern"
+>
+  <!-- Navbar -->
+  <nav
+    class="bg-gray-900/80 backdrop-blur-md border-b border-gray-700 fixed w-full top-0 z-50"
+  >
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <!-- Mobile Menu Button -->
+        <button
+          (click)="isMenuOpen = !isMenuOpen"
+          class="md:hidden p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none"
+        >
+          <svg
+            class="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16"
+            />
+          </svg>
+        </button>
+
+        <!-- Logo -->
+        <div class="flex-shrink-0 flex items-center">
+          <span
+            class="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent"
+          >
+            Premium Showcase
+          </span>
+        </div>
+
+        <!-- Desktop Nav Items -->
+        <div class="hidden md:flex items-center space-x-4">
+          <button
+            (click)="goBack()"
+            class="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition duration-300 flex items-center"
+          >
+            <svg
+              class="w-5 h-5 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M10 19l-7-7m0 0l7-7m-7 7h18"
+              />
+            </svg>
+            Back
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Sidebar -->
+  <div
+    class="fixed inset-0 z-50 transform transition-all duration-300"
+    [class]="isMenuOpen ? 'translate-x-0' : 'translate-x-full'"
+    *ngIf="isMenuOpen"
+  >
+    <div
+      class="absolute inset-0 bg-black/50"
+      (click)="isMenuOpen = false"
+    ></div>
+    <div
+      class="relative h-full w-64 ml-auto bg-gray-900/95 backdrop-blur-xl p-6 shadow-2xl overflow-y-auto"
+    >
+      <!-- Sidebar Content -->
+      <div class="flex flex-col space-y-6">
+        <button
+          (click)="goBack(); isMenuOpen = false"
+          class="flex items-center text-white hover:text-purple-400 transition-colors"
+        >
+          <svg
+            class="w-5 h-5 mr-2"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M10 19l-7-7m0 0l7-7m-7 7h18"
+            />
+          </svg>
+          Back
+        </button>
+
+        <div class="border-b border-gray-700"></div>
+
+        <h3 class="text-sm font-semibold text-gray-400 uppercase">
+          Primary Filters
+        </h3>
+        <div class="flex flex-col space-y-3">
+          <button
+            *ngFor="let primaryFilter of primaryFilters"
+            (click)="selectPrimaryFilter(primaryFilter); isMenuOpen = false"
+            class="text-left px-4 py-2 rounded-lg transition-colors"
+            [class]="
+              activePrimaryFilter === primaryFilter.key
+                ? 'bg-purple-600 text-white'
+                : 'text-gray-300 hover:bg-gray-800'
+            "
+          >
+            {{ primaryFilter.name }}
+          </button>
+        </div>
+
+        <div
+          *ngIf="secondaryFilters.length > 0"
+          class="border-b border-gray-700"
+        ></div>
+
+        <div *ngIf="secondaryFilters.length > 0">
+          <h3 class="text-sm font-semibold text-gray-400 uppercase">
+            Secondary Filters
+          </h3>
+          <div class="flex flex-wrap gap-2 mt-2">
+            <button
+              *ngFor="let filter of secondaryFilters"
+              (click)="activeSecondaryFilter = filter.key"
+              class="px-3 py-1.5 text-xs rounded-full transition-colors"
+              [class]="
+                activeSecondaryFilter === filter.key
+                  ? 'bg-purple-600 text-white'
+                  : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+              "
+            >
+              {{ filter.name }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <main class="pt-20 pb-12 container mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Primary Filters (Desktop) -->
+    <div class="hidden md:block mb-8">
+      <h3 class="text-sm font-semibold text-gray-400 mb-2">Primary Filters</h3>
+      <div class="flex flex-wrap gap-3">
+        <button
+          *ngFor="let primaryFilter of primaryFilters"
+          (click)="selectPrimaryFilter(primaryFilter)"
+          class="px-5 py-2.5 rounded-full text-sm font-medium transition-all"
+          [class]="
+            activePrimaryFilter === primaryFilter.key
+              ? 'bg-purple-600 text-white shadow-lg'
+              : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+          "
+        >
+          {{ primaryFilter.name }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Secondary Filters (Desktop) -->
+    <div *ngIf="secondaryFilters.length > 0" class="hidden md:block mb-8">
+      <h3 class="text-sm font-semibold text-gray-400 mb-2">
+        Secondary Filters
+      </h3>
+      <div class="flex flex-wrap gap-2">
+        <button
+          *ngFor="let filter of secondaryFilters"
+          (click)="activeSecondaryFilter = filter.key"
+          class="px-4 py-1.5 rounded-full text-xs font-medium transition-all"
+          [class]="
+            activeSecondaryFilter === filter.key
+              ? 'bg-purple-600 text-white'
+              : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+          "
+        >
+          {{ filter.name }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Gallery Grid -->
+    <div
+      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+    >
+      <div
+        *ngFor="let item of filteredItems"
+        class="relative group cursor-pointer transform transition duration-300 hover:scale-105"
+        (click)="openModal(item)"
+      >
+        <!-- Media Container -->
+        <div class="rounded-xl overflow-hidden shadow-lg bg-gray-800">
+          <div class="h-48 overflow-hidden relative">
+            <img
+              *ngIf="item.type === 'photo'"
+              [src]="item.path"
+              [alt]="item.name"
+              class="w-full h-full object-cover"
+            />
+            <video
+              *ngIf="item.type === 'video'"
+              class="w-full h-full object-cover"
+              muted
+            >
+              <source [src]="item.path" type="video/mp4" />
+            </video>
+
+            <!-- Favorite Button -->
+            <button
+              (click)="toggleFavorite(item); $event.stopPropagation()"
+              class="absolute top-2 right-2 p-2 bg-gray-900/50 rounded-full backdrop-blur-sm"
+            >
+              <svg
+                class="w-5 h-5"
+                [class.text-red-500]="item.favorite"
+                [class.text-gray-300]="!item.favorite"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </button>
+          </div>
+
+          <!-- Caption -->
+          <div class="p-4">
+            <h3 class="font-semibold text-gray-200 mb-1">{{ item.name }}</h3>
+            <p class="text-xs text-gray-400">
+              {{ item.category }} • {{ item.subcategory }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Modal Overlay -->
+    <div
+      *ngIf="selectedItem"
+      class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4"
+      (click)="selectedItem = null"
+    >
+      <div
+        class="bg-white rounded-xl max-w-4xl w-full overflow-hidden"
+        (click)="$event.stopPropagation()"
+      >
+        <div class="relative aspect-video">
+          <img
+            *ngIf="selectedItem.type === 'photo'"
+            [src]="selectedItem.path"
+            class="w-full h-full object-contain"
+          />
+          <video
+            *ngIf="selectedItem.type === 'video'"
+            class="w-full h-full object-contain"
+            controls
+            autoplay
+          >
+            <source [src]="selectedItem.path" type="video/mp4" />
+          </video>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

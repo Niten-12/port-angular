@@ -1,0 +1,17 @@
+/* You can add global styles to this file, and also import other style files */
+@import "tailwindcss";
+/* Locomotive Scroll */
+[data-scroll-container] {
+  perspective: 1px;
+}
+
+/* AOS Customization */
+[data-aos] {
+  transition-property: transform, opacity;
+}
+
+/* Custom Animations */
+.text-gradient-animation {
+  background-size: 200% auto;
+  animation: text-gradient 3s linear infinite;
+}
